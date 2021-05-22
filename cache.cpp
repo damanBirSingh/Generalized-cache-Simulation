@@ -36,22 +36,18 @@ int main(){
     
     ::cache_impl ch;
     cout<<"Direct Mapped Cache\n"<<endl;
-    ch.set_cache_parameters(16, 2, 0);
+    ch.set_cache_parameters(16, 1, 0);
     cout<<"Cache Size: 16 words and Block size : 1 word"<<endl;
      int i =  0;
     while(i< ch.address.size()){
         ch.retrieve_value_from_direct_cache(ch.address[i++]);
-        if(ch.block_size == 2)
-            ch.retrieve_value_from_direct_cache(ch.address[i++]);
     } 
-    ch.miss = 0;
+    ch.hit = 0; ch.miss=0;
     
     for(int j= 1; j<400; j++){
         i=0;
         while(i< ch.address.size()){
             ch.retrieve_value_from_direct_cache(ch.address[i++]);
-            if(ch.block_size == 2)
-                ch.retrieve_value_from_direct_cache(ch.address[i++]);
         } 
     }
     cout<<"Line Number\tvalidBit\tTag\tdata"<<endl;
@@ -71,19 +67,23 @@ int main(){
     cout<<"Cache Size: 16 words, Block size : 1 word & 2 way set"<<endl;
     i=0;
     while(i< ch.address.size()){
-        cout<<ch.address[i]<<endl;
+        //cout<<ch.address[i]<<endl;
         ch.retrieve_value_from_set_associative_cache(ch.address[i++]);
-        if(ch.block_size == 2)
-            ch.retrieve_value_from_set_associative_cache(ch.address[i++]);
     } 
-    ch.miss = 0;
+    ch.hit = 0; ch.miss=0;
     i=0;
     while(i< ch.address.size()){
-        cout<<ch.address[i]<<endl;
+        //cout<<ch.address[i]<<endl;
         ch.retrieve_value_from_set_associative_cache(ch.address[i++]);
-        if(ch.block_size == 2)
-            ch.retrieve_value_from_set_associative_cache(ch.address[i++]);
-    } 
+    }
+    cout<<"Set Number\tvalidBit\tTag\tdata"<<endl;
+    for(int i=0; i<ch.num_sets; i++){
+        if( (ch.set_associative_cache.find(i) != ch.set_associative_cache.end())){
+            for(cache val: ch.set_associative_cache[i]){
+                cout<<i<<"\t\t"<<val.validBit<<"\t\t"<<val.tag<<"\t"<<val.data<<endl;
+            }
+        } else 
+            cout<<i<<endl;
+    }
     cout<<"Hits: "<<ch.hit<<" misses "<<ch.miss<<endl;
-    
 }

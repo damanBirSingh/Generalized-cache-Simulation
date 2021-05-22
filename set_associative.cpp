@@ -16,16 +16,26 @@ void cache_impl::retrieve_value_from_set_associative_cache(int mem_addr){
     mem_set = (mem_addr>>block_offset_bits) & (int)(pow(2,set_bits) - 1);
     mem_tag = (mem_addr>>(set_bits + block_offset_bits)) & (int)(pow(2,tag_bits) - 1);
     key = (mem_addr>>block_offset_bits) & (int)(pow(2,set_bits + tag_bits) - 1);
-    cout<<"Tag: "<<mem_tag<<" Set: "<<mem_set<<endl;
+    //cout<<"Tag: "<<mem_tag<<" Set: "<<mem_set<<endl;
     if( (set_associative_cache.find(mem_set) != set_associative_cache.end()) && //address wrt line
         containsTag((set_associative_cache.find(mem_set)->second), mem_tag) ) { // in that line, compare tag
         hit++;
-        cout<<"Is a Hit";
+        auto itr = set_associative_cache[mem_set].begin();
+        while (itr != set_associative_cache[mem_set].end() ) {
+            //cout << *itr << " ";
+            if(itr->tag == mem_tag)
+                break;
+            itr++;
+        }
+        set_associative_cache[mem_set].erase(itr);
+        add_block_to_set_associative_cache(set_associative_cache, mem_tag, mem_set, mem_addr, block_size);
+        //push this block to the front
+       // cout<<"Is a Hit";
     } else {
-        cout<<"Is a Miss";
+        //cout<<"Is a Miss";
         miss++;
         if((set_associative_cache.find(mem_set) != set_associative_cache.end()) &&
-            (set_associative_cache.find(mem_set)->second).size() == 2)
+            (set_associative_cache.find(mem_set)->second).size() == set_ways)
             replace_block_in_set_associative_cache(set_associative_cache, mem_tag, mem_set, mem_addr, block_size);
         else
             add_block_to_set_associative_cache(set_associative_cache, mem_tag, mem_set, mem_addr, block_size);
@@ -46,9 +56,10 @@ void add_block_to_set_associative_cache(map<int, list<cache>> &set_associative_c
     block.tag = tag;
     block.validBit = 1;
     block.data = decimal_to_hex_string(mem_addr);
+    if(block_size == 2)
+        block.data += " "+  decimal_to_hex_string(mem_addr + 4);
     set_associative_cache[set].push_front(block);
 }
-
 
 void replace_block_in_set_associative_cache(map<int, list<cache>> &set_associative_cache, int tag, int set, int mem_addr, int block_size){
     set_associative_cache[set].pop_back();
