@@ -7,6 +7,8 @@ using namespace std;
 //enum replacement_algo {FIFO = 0, LRU = 1}; 
 //enum cache_implementation {direct_mapped = 0, fully_associated = 1, set_associative = 2}; 
 
+string decimal_to_hex_string(int);
+
 struct cache{
     int validBit;
     int tag;

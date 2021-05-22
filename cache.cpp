@@ -25,26 +25,33 @@ void cache_impl::set_cache_parameters(int cache_size, int block_size, int set_wa
         num_sets = num_lines/set_ways;
 }
 
+string decimal_to_hex_string(int decimal_value){
+    stringstream ss;
+    ss<< std::hex << decimal_value;
+    return ss.str();
+}
+
 
 int main(){
-    cout<<"Main"<<endl;
+    
     ::cache_impl ch;
+    cout<<"Direct Mapped Cache\n"<<endl;
     ch.set_cache_parameters(16, 2, 0);
     cout<<"Cache Size: 16 words and Block size : 1 word"<<endl;
      int i =  0;
     while(i< ch.address.size()){
-        ch.retrieve_value_from_cache(ch.address[i++]);
+        ch.retrieve_value_from_direct_cache(ch.address[i++]);
         if(ch.block_size == 2)
-            ch.retrieve_value_from_cache(ch.address[i++]);
+            ch.retrieve_value_from_direct_cache(ch.address[i++]);
     } 
     ch.miss = 0;
     
     for(int j= 1; j<400; j++){
         i=0;
         while(i< ch.address.size()){
-            ch.retrieve_value_from_cache(ch.address[i++]);
+            ch.retrieve_value_from_direct_cache(ch.address[i++]);
             if(ch.block_size == 2)
-                ch.retrieve_value_from_cache(ch.address[i++]);
+                ch.retrieve_value_from_direct_cache(ch.address[i++]);
         } 
     }
     cout<<"Line Number\tvalidBit\tTag\tdata"<<endl;
@@ -56,6 +63,27 @@ int main(){
         cout<<"\n";
     }
 
+    cout<<"Hits: "<<ch.hit<<" misses "<<ch.miss<<endl;
+
+    ch.hit = 0; ch.miss=0;
+    cout<<"\n\nLRU Set Associative Cache\n";
+    ch.set_cache_parameters(16, 1, 2);
+    cout<<"Cache Size: 16 words, Block size : 1 word & 2 way set"<<endl;
+    i=0;
+    while(i< ch.address.size()){
+        cout<<ch.address[i]<<endl;
+        ch.retrieve_value_from_set_associative_cache(ch.address[i++]);
+        if(ch.block_size == 2)
+            ch.retrieve_value_from_set_associative_cache(ch.address[i++]);
+    } 
+    ch.miss = 0;
+    i=0;
+    while(i< ch.address.size()){
+        cout<<ch.address[i]<<endl;
+        ch.retrieve_value_from_set_associative_cache(ch.address[i++]);
+        if(ch.block_size == 2)
+            ch.retrieve_value_from_set_associative_cache(ch.address[i++]);
+    } 
     cout<<"Hits: "<<ch.hit<<" misses "<<ch.miss<<endl;
     
 }

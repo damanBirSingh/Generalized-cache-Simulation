@@ -2,7 +2,6 @@
 #include "cache.hpp"
 
 void add_block_to_cache(map<int, struct cache> &, int, int, int, int);
-string decimal_to_hex_string(int);
 
 void cache_impl::retrieve_value_from_direct_cache(int mem_addr){
     
@@ -33,10 +32,4 @@ void add_block_to_cache(map<int, struct cache> &direct_cache, int tag, int line,
     if(block_size==2)
         block.data += " " + decimal_to_hex_string(mem_addr + 4);
     direct_cache[line] = block;
-}
-
-string decimal_to_hex_string(int decimal_value){
-    stringstream ss;
-    ss<< std::hex << decimal_value;
-    return ss.str();
 }
