@@ -1,0 +1,41 @@
+#ifndef CACHE_HEADER
+#define CACHE_HEADER
+
+#include<bits/stdc++.h>
+
+using namespace std;
+//enum replacement_algo {FIFO = 0, LRU = 1}; 
+//enum cache_implementation {direct_mapped = 0, fully_associated = 1, set_associative = 2}; 
+
+struct cache{
+    int validBit;
+    int tag;
+    int data;
+    //cache(int validBit, int tag, int data)                                    
+    //: validBit(validBit), tag(tag), data(data) {}
+};
+
+class cache_impl{
+    public:
+    int block_size; // in words
+    int num_sets;
+    int cache_size; //in words
+    int num_lines;
+    int block_offset_bits;
+    
+    //cache_implementation cache_impl;
+    //replacement_algo repl_algo;
+    vector<int> address;
+    ifstream file;
+    map<int, struct cache> direct_cache; // map<line_num, cache>
+
+    int miss = 0, hit = 0;
+    cache_impl();
+    void set_cache_parameters(int, int, int);
+    void retrieve_value_from_cache(int);
+    ~cache_impl();
+};
+
+#endif
+
+
