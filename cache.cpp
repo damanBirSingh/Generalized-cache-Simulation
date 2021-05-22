@@ -15,21 +15,23 @@ cache_impl::~cache_impl(){
     file.close();
 }
 
-void cache_impl::set_cache_parameters(int cache_size, int block_size, int num_sets){
+void cache_impl::set_cache_parameters(int cache_size, int block_size, int set_ways){
     this->cache_size = cache_size;
     this->block_size = block_size;
-    this->num_sets = num_sets;
+    this->set_ways = set_ways;
     num_lines = cache_size/block_size;
     block_offset_bits = log2(block_size*4);
+    if(set_ways != 0)
+        num_sets = num_lines/set_ways;
 }
 
 
 int main(){
     cout<<"Main"<<endl;
     ::cache_impl ch;
-    ch.set_cache_parameters(16, 1, 0);
-    
-    int i =  0;
+    ch.set_cache_parameters(16, 2, 0);
+    cout<<"Cache Size: 16 words and Block size : 1 word"<<endl;
+     int i =  0;
     while(i< ch.address.size()){
         ch.retrieve_value_from_cache(ch.address[i++]);
         if(ch.block_size == 2)
@@ -37,7 +39,7 @@ int main(){
     } 
     ch.miss = 0;
     
-    for(int j= 1; j<10000; j++){
+    for(int j= 1; j<400; j++){
         i=0;
         while(i< ch.address.size()){
             ch.retrieve_value_from_cache(ch.address[i++]);
@@ -55,4 +57,5 @@ int main(){
     }
 
     cout<<"Hits: "<<ch.hit<<" misses "<<ch.miss<<endl;
+    
 }

@@ -1,9 +1,10 @@
 #include<bits/stdc++.h>
 #include "cache.hpp"
 
-void add_block_to_cache(map<int, struct cache> &, int, int, int);
+void add_block_to_cache(map<int, struct cache> &, int, int, int, int);
+string decimal_to_hex_string(int);
 
-void cache_impl::retrieve_value_from_cache(int mem_addr){
+void cache_impl::retrieve_value_from_direct_cache(int mem_addr){
     
     int mem_tag, mem_line, mem_block_offset;
 
@@ -19,15 +20,23 @@ void cache_impl::retrieve_value_from_cache(int mem_addr){
         hit++;
     } else {
         miss++;
-        add_block_to_cache(direct_cache, mem_tag, mem_line, mem_addr);
+        add_block_to_cache(direct_cache, mem_tag, mem_line, mem_addr, block_size);
     }
 
 }
 
-void add_block_to_cache(map<int, struct cache> &direct_cache, int tag, int line, int mem_addr){
+void add_block_to_cache(map<int, struct cache> &direct_cache, int tag, int line, int mem_addr, int block_size){
     cache block;
     block.tag = tag;
     block.validBit = 1;
-    block.data = mem_addr;
+    block.data = decimal_to_hex_string(mem_addr);
+    if(block_size==2)
+        block.data += " " + decimal_to_hex_string(mem_addr + 4);
     direct_cache[line] = block;
+}
+
+string decimal_to_hex_string(int decimal_value){
+    stringstream ss;
+    ss<< std::hex << decimal_value;
+    return ss.str();
 }
