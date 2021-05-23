@@ -1,14 +1,5 @@
+#include "cache.hpp"
 
-
-#include<iostream>
-#include<list>
-#include<queue>
-#include<fstream>
-#include<cmath>
-#include<sstream>
-//#include<string>
-
-using namespace std;
 #define LEN 10
 struct cacheMemory
 {
@@ -23,8 +14,8 @@ int blockSize, replacementAlgo,cacheSize;
 int offsetBits = 0;
 int  wordSize = 4;
 int misses = 0;
-void removeEntry()
-{
+
+void removeEntry(){
 	//cout<<"\n REMOVING ENTRY";
 	for(int i = 0; i <blockSize; i++)
 	{
@@ -34,15 +25,16 @@ void removeEntry()
 		cout<<endl<<"index: "<<dec<<ind;
 	}
 }
+
 void firstIteration()
 {
 	bool found;
 	list<int>::iterator l;
 	int addr;
-	for(int n = 0; n < 400; n++)
+	for(int n = 0; n < 10; n++)
 	{
 	for(l = addresses.begin(); l!=addresses.end();++l)
-	{	cout<<hex<<"\nAddr: "<<*l<<" ";
+	{	//cout<<hex<<"\nAddr: "<<*l<<" ";
 		addr = *l;
 		found = 0;
 		int tag = addr >> offsetBits;
@@ -70,12 +62,12 @@ void firstIteration()
 			string d;
 			ss<<hex<<*l;
 			ss>>d;
-			cout<<"\n d: "<<d;
+			//cout<<"\n d: "<<d;
 			//stoi(d+d+d+d, 0, 16);
 			cacheWord.data = *l;//stoi(d+d+d+d, 0, 10);//d+d+d+d;
 			addr += wordSize;
 			//uint8_t z  = *l;
-			cout<<endl<<hex<<addr<<" Check \t"<<cacheWord.tag<<"\t"<<cacheWord.valid<<"\t"<<hex<<cacheWord.data;//z<<z<<z<<z;//<<cacheWord.data<<cacheWord.data<<cacheWord.data;
+			//cout<<endl<<hex<<addr<<" Check \t"<<cacheWord.tag<<"\t"<<cacheWord.valid<<"\t"<<hex<<cacheWord.data;//z<<z<<z<<z;//<<cacheWord.data<<cacheWord.data<<cacheWord.data;
 
 			//addToQueue(cacheEntry);
 			cache.push_back(cacheWord);
