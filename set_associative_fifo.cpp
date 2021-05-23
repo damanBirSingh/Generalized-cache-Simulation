@@ -31,13 +31,14 @@ void cache_impl::retrieve_value_from_set_associative_cache_FIFO(int address){
                 while(temp>0){
                     set_associative_cache_FIFO[whichSet].push_back(cache(1,atag,decimal_to_hex_string(address)));
                     temp--;
+                    address += word_size;
                 }
             } else{
                 while(temp > 0){
                     set_associative_cache_FIFO[whichSet].pop_front();
-
                     set_associative_cache_FIFO[whichSet].push_back(cache(1,atag,decimal_to_hex_string(address)));
-                        temp--;
+                    temp--;
+                    address += word_size;
 
                 }
             }

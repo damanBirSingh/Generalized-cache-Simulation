@@ -23,7 +23,7 @@ void cache_impl::set_cache_parameters(int cache_size, int block_size, int set_wa
     block_offset_bits = log2(block_size*4);
     if(set_ways != 0){
         num_sets = num_lines/set_ways;
-        cout<<"num sets :"<<num_sets<<endl;
+        //cout<<"num sets :"<<num_sets<<endl;
         set_associative_cache_FIFO = vector<deque<cache>>(num_sets, deque<cache>(set_ways*block_size, cache(0,0,"")));
     }
 }
@@ -64,9 +64,10 @@ void cache_impl::call_appropriate_cache(int addr){
 }
 
 void cache_impl::print_appropriate_cache_state(){
-    cout<<"Line/Set Num   \tvalidBit\tTag\tdata"<<endl;
+    
     switch(c_type){
         case direct_mapped:{
+            cout<<"Line/Set Num   \tvalidBit\tTag\tdata"<<endl;
             for(int i=0; i<num_lines; i++){
                 if( (direct_cache.find(i) != direct_cache.end()))
                     cout<<i<<"\t\t"<<(direct_cache.find(i)->second).validBit<<"\t\t"<<(direct_cache.find(i)->second).tag<<"\t"<<(direct_cache.find(i)->second).data;
@@ -78,26 +79,42 @@ void cache_impl::print_appropriate_cache_state(){
         }
         case fully_associative:{
             if(repl_algo == FIFO){
-
+                //cout<<endl<<"INDEX "<<ind;
+	            cout<<endl<<"Tag\tValid\t\tData";
+                for(int j = (cache_size - ind); j < fully_associative_cache_fifo.size(); j = j + block_size){
+                    cout<<endl<<fully_associative_cache_fifo[j].tag<<"\t"<<fully_associative_cache_fifo[j].validBit<<"\t";
+                    int m = j;
+                    for(; m < (j + block_size); m++)
+                        cout<<" "<<fully_associative_cache_fifo[m].data;
+                }
+                for(int k = 0; k < (cache_size - ind); k = k + block_size){
+                    cout<<endl<<fully_associative_cache_fifo[k].tag<<"\t"<<fully_associative_cache_fifo[k].validBit<<"\t";
+                    int m = k;
+                    for(; m < (k + block_size); m++)
+                    cout<<" "<<fully_associative_cache_fifo[m].data;
+                }
+                cout<<endl;
             }else{
+                cout<<"Line/Set Num   \tvalidBit\tTag\tdata"<<endl;
                 int k = 0;
                 for(auto val: fully_associative_cache){
                     cout<<k++<<"\t\t"<<val.second.validBit<<"\t\t"<<val.second.tag<<"\t"<<val.second.data<<endl;
                 }
             } 
-    
-            
-                
             break;
         }
         case set_associative:{
+            cout<<"Line/Set Num   \tvalidBit\tTag\tdata"<<endl;
             if(repl_algo == FIFO){
                 for(int i = 0; i<set_associative_cache_FIFO.size(); i++){
+                    //int set_size = set_associative_cache_FIFO[i].size()/block_size;
                     for(int j=0; j<set_associative_cache_FIFO[i].size(); j++){
                         cout<<i<<"\t\t  ";
                         cout<<set_associative_cache_FIFO[i][j].validBit<<"\t\t";
                         cout<<set_associative_cache_FIFO[i][j].tag<<"\t";
-                        cout<<set_associative_cache_FIFO[i][j].data<<"\t";
+                        cout<<set_associative_cache_FIFO[i][j].data<<" ";
+                        if(block_size == 2 )
+                            cout<<set_associative_cache_FIFO[i][++j].data<<"\t";
                         cout<<"\n";
                     }
                 }
