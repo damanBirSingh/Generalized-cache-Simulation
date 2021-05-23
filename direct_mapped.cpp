@@ -12,8 +12,8 @@ void cache_impl::retrieve_value_from_direct_cache(int address){
     mem_block_offset = (address) & (int)(pow(2,block_offset_bits) - 1);
     mem_line = (address>>block_offset_bits) & (int)(pow(2,line_bits) - 1);
     mem_tag = (address>>(line_bits + block_offset_bits));
-    cout<<"Line bits:"<<line_bits<<" Block Offset bits "<<block_offset_bits<<endl;
-    cout<<"Line :"<<mem_line<<" Tag "<<mem_tag<<endl;
+    //cout<<"Line bits:"<<line_bits<<" Block Offset bits "<<block_offset_bits<<endl;
+    //cout<<"Line :"<<mem_line<<" Tag "<<mem_tag<<endl;
 
     if( (direct_cache.find(mem_line) != direct_cache.end()) && //address wrt line
         ((direct_cache.find(mem_line)->second).tag == mem_tag) ) { // in that line, compare tag

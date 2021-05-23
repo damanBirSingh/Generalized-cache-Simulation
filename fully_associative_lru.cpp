@@ -12,7 +12,7 @@ void cache_impl::retrieve_value_from_fully_associative_cache_LRU(int address){
     mem_tag = (address>>block_offset_bits);
     //mem_line = mem_tag%num_lines;
     
-    cout<<"Tag: "<<mem_tag<<endl;
+    //cout<<"Tag: "<<mem_tag<<endl;
     
     if( (fully_associative_cache.find(mem_tag) != fully_associative_cache.end()) ) { 
         hit++;

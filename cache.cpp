@@ -149,5 +149,5 @@ int main(){
     }
     ch.print_appropriate_cache_state();
     cout<<"Hits: "<<ch.hit<<" Misses :"<<ch.miss<<endl;
-    
+    //cout<<"Miss Rate: "<<(float)ch.miss/100<<"% "<<endl;
 }
