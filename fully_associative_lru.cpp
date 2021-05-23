@@ -18,7 +18,7 @@ void cache_impl::retrieve_value_from_fully_associative_cache_LRU(int address){
         hit++;
         auto itr = fa_keys.begin();
         while (itr != fa_keys.end() ) {
-            cout << *itr << " ";
+            //cout << *itr << " ";
             if(*itr == mem_tag)
                 break;
             itr++;
@@ -26,9 +26,9 @@ void cache_impl::retrieve_value_from_fully_associative_cache_LRU(int address){
         fa_keys.erase(itr);
         fa_keys.push_front(mem_tag);
         //push this block to the front
-        cout<<"Is a Hit\n";
+       // cout<<"Is a Hit\n";
     } else {
-        cout<<"Is a Miss\n";
+        //cout<<"Is a Miss\n";
         miss++;
         if(fully_associative_cache.size() == num_lines) //cache is full
             replace_block_in_fully_associative_cache(fully_associative_cache, fa_keys,  mem_tag, address, block_size);
@@ -44,9 +44,7 @@ void cache_impl::retrieve_value_from_fully_associative_cache_LRU(int address){
 void add_block_to_fully_associative_cache(map<int, cache> &fully_associative_cache, list<int> &keys,  int tag, int address, int block_size){
     //cout<<"adding\n";
     //fflush(stdout);
-    //cache block;
-    //block.tag = tag;
-    //block.validBit = 1;
+;
     string data = decimal_to_hex_string(address);
     if(block_size == 2)
         data += " "+  decimal_to_hex_string(address + 4);

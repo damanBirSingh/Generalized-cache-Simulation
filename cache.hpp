@@ -10,7 +10,7 @@ enum cache_type {direct_mapped = 1, fully_associative = 2, set_associative = 3};
 string decimal_to_hex_string(int);
 
 struct cache{
-    int validBit;
+    bool validBit;
     int tag;
     string data;
 
@@ -27,6 +27,7 @@ class cache_impl{
     int cache_size; //in words
     int num_lines;
     int block_offset_bits;
+    int word_size = 4;
     cache_type c_type;
     replacement_algo repl_algo;
 
@@ -40,6 +41,10 @@ class cache_impl{
     vector<deque<cache>> set_associative_cache_FIFO;
 
     map<int, cache> fully_associative_cache; // map<tag, cache>
+    int ind;
+
+    deque<cache> fully_associative_cache_fifo;
+
     list<int> fa_keys;
 
     int miss = 0, hit = 0;
@@ -49,7 +54,7 @@ class cache_impl{
     void retrieve_value_from_set_associative_cache_LRU(int);
     void retrieve_value_from_set_associative_cache_FIFO(int);
     void retrieve_value_from_fully_associative_cache_LRU(int);
-    //void retrieve_value_from_fully_associative_cache_FIFO(int);
+    void retrieve_value_from_fully_associative_cache_FIFO(int);
     void call_appropriate_cache(int);
     void print_appropriate_cache_state();
     ~cache_impl();

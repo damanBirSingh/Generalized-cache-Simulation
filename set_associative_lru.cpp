@@ -9,12 +9,11 @@ void cache_impl::retrieve_value_from_set_associative_cache_LRU(int address){
     int mem_tag, mem_set, mem_block_offset, key;
 
     int set_bits = log2(num_sets);
-    int tag_bits = log2(address) - block_offset_bits + set_bits;
     
     mem_block_offset = (address) & (int)(pow(2,block_offset_bits) - 1);
     mem_set = (address>>block_offset_bits) & (int)(pow(2,set_bits) - 1);
-    mem_tag = (address>>(set_bits + block_offset_bits)) & (int)(pow(2,tag_bits) - 1);
-    key = (address>>block_offset_bits) & (int)(pow(2,set_bits + tag_bits) - 1);
+    mem_tag = (address>>(set_bits + block_offset_bits));
+
     //cout<<"Tag: "<<mem_tag<<" Set: "<<mem_set<<endl;
     if( (set_associative_cache.find(mem_set) != set_associative_cache.end()) && //address wrt line
         containsTag((set_associative_cache.find(mem_set)->second), mem_tag) ) { // in that line, compare tag
@@ -29,9 +28,9 @@ void cache_impl::retrieve_value_from_set_associative_cache_LRU(int address){
         set_associative_cache[mem_set].erase(itr);
         add_block_to_set_associative_cache(set_associative_cache, mem_tag, mem_set, address, block_size);
         //push this block to the front
-       // cout<<"Is a Hit";
+        //cout<<"Is a Hit\n";
     } else {
-        //cout<<"Is a Miss";
+        //cout<<"Is a Miss\n";
         miss++;
         if((set_associative_cache.find(mem_set) != set_associative_cache.end()) &&
             (set_associative_cache.find(mem_set)->second).size() == set_ways)

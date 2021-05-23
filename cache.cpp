@@ -23,6 +23,7 @@ void cache_impl::set_cache_parameters(int cache_size, int block_size, int set_wa
     block_offset_bits = log2(block_size*4);
     if(set_ways != 0){
         num_sets = num_lines/set_ways;
+        cout<<"num sets :"<<num_sets<<endl;
         set_associative_cache_FIFO = vector<deque<cache>>(num_sets, deque<cache>(set_ways*block_size, cache(0,0,"")));
     }
 }
@@ -30,7 +31,13 @@ void cache_impl::set_cache_parameters(int cache_size, int block_size, int set_wa
 string decimal_to_hex_string(int decimal_value){
     stringstream ss;
     ss<< std::hex << decimal_value;
-    return ss.str();
+    string hex_string ="";
+    for(int i=0; i<4; i++){
+        if(decimal_value <= 15)
+        hex_string += "0";
+        hex_string += ss.str();
+    }
+    return hex_string+" ";
 }
 
 void cache_impl::call_appropriate_cache(int addr){
@@ -41,7 +48,7 @@ void cache_impl::call_appropriate_cache(int addr){
         }
         case fully_associative:{
             if(repl_algo == FIFO)
-                retrieve_value_from_fully_associative_cache_LRU(addr);
+                retrieve_value_from_fully_associative_cache_FIFO(addr);
             else
                 retrieve_value_from_fully_associative_cache_LRU(addr);
             break;
@@ -73,16 +80,13 @@ void cache_impl::print_appropriate_cache_state(){
             if(repl_algo == FIFO){
 
             }else{
-                for(int i=0; i<num_lines; i++){
-                    map<int, cache>::iterator it;
-                    if( (fully_associative_cache.find(i) != fully_associative_cache.end())){
-                        for(cache val: set_associative_cache[i]){
-                            cout<<i<<"\t\t"<<val.validBit<<"\t\t"<<val.tag<<"\t"<<val.data<<endl;
-                        }
-                    } else 
-                        cout<<i<<endl;
+                int k = 0;
+                for(auto val: fully_associative_cache){
+                    cout<<k++<<"\t\t"<<val.second.validBit<<"\t\t"<<val.second.tag<<"\t"<<val.second.data<<endl;
                 }
-            }
+            } 
+    
+            
                 
             break;
         }
@@ -120,6 +124,7 @@ int main(){
     cout<<"Select Cache type: \n\n1.Direct Mapped\n2.Fully Associative\n3.Set Associative\n-->";
     cin>>temp;
     ch.c_type = (cache_type)temp;
+    ch.set_ways = 0;
     if(ch.c_type != direct_mapped){
         cout<<"Select Replacement Algorithm\n1.FIFO\n2.LRU\n-->";
         cin>>temp;
@@ -127,74 +132,22 @@ int main(){
     }
     if(ch.c_type == set_associative){
         cout<<"Enter the number of Ways\n-->";
-        cin>>temp;
-        ch.set_ways = (cache_type)temp;
+        cin>>ch.set_ways;
     }
     ch.set_cache_parameters(ch.cache_size, ch.block_size, ch.set_ways);
     int i =  0;
+    ch.ind = 0;
     while(i< ch.address.size())
         ch.call_appropriate_cache(ch.address[i++]);
     
     ch.hit = 0; ch.miss=0; //reset after first iteration
     
-    for(int j= 1; j<400; j++){
+    for(int j= 1; j<2; j++){
         i=0;
         while(i< ch.address.size())
             ch.call_appropriate_cache(ch.address[i++]);
     }
     ch.print_appropriate_cache_state();
     cout<<"Hits: "<<ch.hit<<" Misses :"<<ch.miss<<endl;
-
-    /*ch.hit = 0; ch.miss=0;
-    cout<<"\n\nLRU Set Associative Cache\n";
-    ch.set_cache_parameters(16, 1, 2);
-    cout<<"Cache Size: 16 words, Block size : 1 word & 2 way set"<<endl;
-    i=0;
-    while(i< ch.address.size()){
-        //cout<<ch.address[i]<<endl;
-        ch.retrieve_value_from_set_associative_cache_LRU(ch.address[i++]);
-    } 
-    ch.hit = 0; ch.miss=0;
-    i=0;
-    while(i< ch.address.size()){
-        //cout<<ch.address[i]<<endl;
-        ch.retrieve_value_from_set_associative_cache_LRU(ch.address[i++]);
-    }
-    cout<<"Set Number\tvalidBit\tTag\tdata"<<endl;
-    for(int i=0; i<ch.num_sets; i++){
-        if( (ch.set_associative_cache.find(i) != ch.set_associative_cache.end())){
-            for(cache val: ch.set_associative_cache[i]){
-                cout<<i<<"\t\t"<<val.validBit<<"\t\t"<<val.tag<<"\t"<<val.data<<endl;
-            }
-        } else 
-            cout<<i<<endl;
-    }
-    cout<<"Hits: "<<ch.hit<<" misses "<<ch.miss<<endl;
-
-    ch.hit = 0; ch.miss=0;
-    cout<<"\n\nLRU Fully Associative Cache\n";
-    ch.set_cache_parameters(16, 2, 0);
-    cout<<"Cache Size: 16 words, Block size : 1 word "<<endl;
-    i=0;
-    while(i< ch.address.size()){
-        //cout<<ch.address[i]<<endl;
-        ch.retrieve_value_from_fully_associative_cache_LRU(ch.address[i++]);
-    } 
-    ch.hit = 0; ch.miss=0;
-    i=0;
-    while(i< ch.address.size()){
-        //cout<<ch.address[i]<<endl;
-        ch.retrieve_value_from_fully_associative_cache_LRU(ch.address[i++]);
-    }
     
-    /*cout<<"Set Number\tvalidBit\tTag\tdata"<<endl;
-    for(int i=0; i<ch.num_sets; i++){
-        if( (ch.fully_associative_cache.find(i) != ch.fully_associative_cache.end())){
-            for(cache val: ch.set_associative_cache[i]){
-                cout<<i<<"\t\t"<<val.validBit<<"\t\t"<<val.tag<<"\t"<<val.data<<endl;
-            }
-        } else 
-            cout<<i<<endl;
-    }*/
-    //cout<<"Hits: "<<ch.hit<<" misses "<<ch.miss<<endl;
 }

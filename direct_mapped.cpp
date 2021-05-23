@@ -3,7 +3,7 @@
 void add_block_to_cache(map<int, cache> &, int, int, int, int);
 
 void cache_impl::retrieve_value_from_direct_cache(int address){
-    cout<<"Cache Size "<<cache_size<<" BLock Size "<<block_size<<endl;
+    //cout<<"Cache Size "<<cache_size<<" BLock Size "<<block_size<<endl;
     int mem_tag, mem_line, mem_block_offset;
 
     int line_bits = log2(num_lines);
@@ -18,9 +18,9 @@ void cache_impl::retrieve_value_from_direct_cache(int address){
     if( (direct_cache.find(mem_line) != direct_cache.end()) && //address wrt line
         ((direct_cache.find(mem_line)->second).tag == mem_tag) ) { // in that line, compare tag
         hit++;
-        cout<<"Is a Hit\n";
+        //cout<<"Is a Hit\n";
     } else {
-        cout<<"Is a Miss\n";
+        //cout<<"Is a Miss\n";
         miss++;
         add_block_to_cache(direct_cache, mem_tag, mem_line, address, block_size);
     }
@@ -28,9 +28,6 @@ void cache_impl::retrieve_value_from_direct_cache(int address){
 }
 
 void add_block_to_cache(map<int, cache> &direct_cache, int tag, int line, int address, int block_size){
-   
-    //block.tag = tag;
-    //block.validBit = 1;
     string data = decimal_to_hex_string(address);
     if(block_size==2)
         data += " " + decimal_to_hex_string(address + 4);
