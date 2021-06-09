@@ -159,12 +159,12 @@ int main(){
     
     ch.hit = 0; ch.miss=0; //reset after first iteration
     
-    for(int j= 1; j<2; j++){
+    for(int j= 1; j<400; j++){
         i=0;
         while(i< ch.address.size())
             ch.call_appropriate_cache(ch.address[i++]);
     }
     ch.print_appropriate_cache_state();
     cout<<"Hits: "<<ch.hit<<" Misses :"<<ch.miss<<endl;
-    //cout<<"Miss Rate: "<<(float)ch.miss/100<<"% "<<endl;
+    cout<<"Miss Rate: "<<(float)ch.miss/100<<"% "<<endl;
 }
