@@ -1,4 +1,4 @@
-# CPP Program to simulate the generalized cache behavior
+# CPP Program to simulate a Generalized Cache behaviour
 
 The cache has these parameters: block size (b), number of the set (S), number of ways (N) and size of the cache (C). The cache must have these fields: Valid-bit, Tag and Data.  The user can choose the following cache organization:
 
