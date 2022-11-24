@@ -23,7 +23,7 @@ The cache has these parameters: block size (b), number of the set (S), number of
             ii. LRU
 
 
-To build, open terminal in the extracted folder and run: 
+To build open terminal in the extracted folder and run: 
 
     make 
 
